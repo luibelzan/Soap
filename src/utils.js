@@ -38,6 +38,8 @@ function parseXML(xmlString) {
                         console.log(et);
                         console.log(c);
 
+                    } else if(idRpt == 'S31') {
+                        
                     }
                     var clientId = result.Report.Cnc[0].Cnt[0].S13[0].$.ClientId;
                 }

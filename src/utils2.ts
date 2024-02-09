@@ -15,23 +15,31 @@ const xmlString = `<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="ht
                 if(err) {
                     console.error('Error al parsear XML:', err);
                 } else {
-                    const idRpt = result.Report.$.IdRpt;
-                    const idPet = result.Report.$.IdPet;
-                    const version = result.Report.$.Version;
-                    //const cncId = result.Report.Cnc[0].$.Id;
-                    //const fh = result.Report.Cnc[0].Cnt[0].S31[0].$.Fh;
-                    //const clientId = result.Report.Cnc[0].Cnt[0].S31[0].$.ClientId;
+                
+                    var idRpt = result.Report.$.IdRpt;
+                    var idPet = result.Report.$.IdPet;
+                    var version = result.Report.$.Version;
+                    if(idRpt == 'S13') {
+                        var cncId = result.Report.Cnc[0].$.Id;
+                        var cntId = result.Report.Cnc[0].Cnt[0].$.Id;
+                        var fh = result.Report.Cnc[0].Cnt[0].S13[0].$.Fh;
+                        var et = result.Report.Cnc[0].Cnt[0].S13[0].$.Et;
+                        var c = result.Report.Cnc[0].Cnt[0].S13[0].$.C;
 
-                    // Imprimir los valores obtenidos
-                    console.log(result);
-                    console.log(result.Report.Cnc[0].$.Id);
-                    console.log(result.Report.Cnc[0].Cnt[0].$.Id);
-                    console.log(result.Report.Cnc[0].Cnt[0].S31[0].$.Fh);
-                    console.log(result.Report.Cnc[0].Cnt[0].S31[0].$.ClientId);
-                    console.log(result.Report.Cnc[0].Cnt[0].S31[0].$.Et);
-                    console.log(result.Report.Cnc[0].Cnt[0].S31[0].$.C);
+                        // Imprimir los valores obtenidos
+                        console.log(idRpt);
+                        console.log(idPet);
+                        console.log(version);
+                        console.log(cncId);
+                        console.log(cntId);
+                        console.log(fh);
+                        console.log(et);
+                        console.log(c);
 
-
+                    } else if(idRpt == 'S31') {
+                        
+                    }
+                    var clientId = result.Report.Cnc[0].Cnt[0].S13[0].$.ClientId;
 
 
 

@@ -18,21 +18,36 @@ export function parseXML(xmlString: string) {
                 if(err) {
                     console.error('Error al parsear XML:', err);
                 } else {
-                    const idRpt = result.Report.$.IdRpt;
-                    const idPet = result.Report.$.IdPet;
-                    const version = result.Report.$.Version;
-                    const cncId = result.Report.Cnc[0].$.Id;
-                    const cntId = result.Report.Cnc[0].Cnt[0].$.Id;
-                    const fh = result.Report.Cnc[0].Cnt[0].S31[0].$.Fh;
-                    const clientId = result.Report.Cnc[0].Cnt[0].S31[0].$.ClientId;
+                    var idRpt = result.Report.$.IdRpt;
+                    var idPet = result.Report.$.IdPet;
+                    var version = result.Report.$.Version;
+                    if(idRpt == 'S13') {
+                        var cncId = result.Report.Cnc[0].$.Id;
+                        var cntId = result.Report.Cnc[0].Cnt[0].$.Id;
+                        var fh = result.Report.Cnc[0].Cnt[0].S13[0].$.Fh;
+                        var et = result.Report.Cnc[0].Cnt[0].S13[0].$.Et;
+                        var c = result.Report.Cnc[0].Cnt[0].S13[0].$.C;
+                        var d1 = result.Report.Cnc[0].Cnt[0].S13[0].$.D1;
+                        var d2 = result.Report.Cnc[0].Cnt[0].S13[0].$.D2;
+                        var errCat = result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCat;
+                        var errCode = result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCode;
 
-                    // Imprimir los valores obtenidos
-                    console.log('IdRpt:', idRpt);
-                    console.log('IdPet:', idPet);
-                    console.log('Version:', version);
-                    console.log('Cnc Id:', cncId);
-                    console.log('Fh:', fh);
-                    console.log('ClientId:', clientId);
+                    } else if(idRpt == 'S15') {
+                        var cncId = result.Report.Cnc[0].$.Id;
+                        var fh = result.Report.Cnc[0].S15[0].$.Fh;
+                        var et = result.Report.Cnc[0].S15[0].$.Et;
+                        var c = result.Report.Cnc[0].S15[0].$.C;
+                        var d1 = result.Report.Cnc[0].S15[0].$.D1;
+                        var d2 = result.Report.Cnc[0].S15[0].$.D2;;
+                    } else if(idRpt == 'S31') {
+                        var cncId = result.Report.Cnc[0].$.Id;
+                        var fh = result.Report.Cnc[0].S31[0].$.Fh;
+                        var clientId = result.Report.Cnc[0].S15[0].$.ClientId;
+                        var status = result.Report.Cnc[0].S15[0].$.Status;
+                        var keyRequest = result.Report.Cnc[0].S15[0].$.KeyRequest;
+                    } else if(idRpt == 'S63') {
+
+                    }
                 }
             })
         }
