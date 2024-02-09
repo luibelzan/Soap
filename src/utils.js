@@ -21,16 +21,25 @@ function parseXML(xmlString) {
                     var idRpt = result.Report.$.IdRpt;
                     var idPet = result.Report.$.IdPet;
                     var version = result.Report.$.Version;
-                    //var cncId = result.Report.Cnc[0].$.Id;
-                    //var fh = result.Report.Cnc[0].Cnt[0].S31[0].$.Fh;
-                    //var clientId = result.Report.Cnc[0].Cnt[0].S31[0].$.ClientId;
-                    // Imprimir los valores obtenidos
-                    console.log('IdRpt:', idRpt);
-                    console.log('IdPet:', idPet);
-                    console.log('Version:', version);
-                    //console.log('Cnc Id:', cncId);
-                    //console.log('Fh:', fh);
-                    //console.log('ClientId:', clientId);
+                    if(idRpt == 'S13') {
+                        var cncId = result.Report.Cnc[0].$.Id;
+                        var cntId = result.Report.Cnc[0].Cnt[0].$.Id;
+                        var fh = result.Report.Cnc[0].Cnt[0].S13[0].$.Fh;
+                        var et = result.Report.Cnc[0].Cnt[0].S13[0].$.Et;
+                        var c = result.Report.Cnc[0].Cnt[0].S13[0].$.C;
+
+                        // Imprimir los valores obtenidos
+                        console.log(idRpt);
+                        console.log(idPet);
+                        console.log(version);
+                        console.log(cncId);
+                        console.log(cntId);
+                        console.log(fh);
+                        console.log(et);
+                        console.log(c);
+
+                    }
+                    var clientId = result.Report.Cnc[0].Cnt[0].S13[0].$.ClientId;
                 }
             });
         }

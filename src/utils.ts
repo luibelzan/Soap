@@ -21,17 +21,18 @@ export function parseXML(xmlString: string) {
                     const idRpt = result.Report.$.IdRpt;
                     const idPet = result.Report.$.IdPet;
                     const version = result.Report.$.Version;
-                    //const cncId = result.Report.Cnc[0].$.Id;
-                    //const fh = result.Report.Cnc[0].Cnt[0].S31[0].$.Fh;
-                    //const clientId = result.Report.Cnc[0].Cnt[0].S31[0].$.ClientId;
+                    const cncId = result.Report.Cnc[0].$.Id;
+                    const cntId = result.Report.Cnc[0].Cnt[0].$.Id;
+                    const fh = result.Report.Cnc[0].Cnt[0].S31[0].$.Fh;
+                    const clientId = result.Report.Cnc[0].Cnt[0].S31[0].$.ClientId;
 
                     // Imprimir los valores obtenidos
                     console.log('IdRpt:', idRpt);
                     console.log('IdPet:', idPet);
                     console.log('Version:', version);
-                    //console.log('Cnc Id:', cncId);
-                    //console.log('Fh:', fh);
-                    //console.log('ClientId:', clientId);
+                    console.log('Cnc Id:', cncId);
+                    console.log('Fh:', fh);
+                    console.log('ClientId:', clientId);
                 }
             })
         }
