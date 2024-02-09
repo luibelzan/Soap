@@ -1,3 +1,4 @@
+const { parseXML } = require('../src/utils.js');
 const modulo = require('xml2js');
 const http =require('http');
 
@@ -14,15 +15,21 @@ const requestListener = function(req, res) {
         });
 
         req.on('end', () => {
-            console.log(data);
-            
+            //console.log(data);
+            /*
             data = modulo.parseString(data, (err, result) => {
                 if (err) {
                     console.error('Error al parsear XML:', err);
                 } else {
                     console.log('XML parseado:', result);
+                    //const body = result['S:Envelope']['S:Body'][0]['Report'][0];
+                    //console.log(body);
+                    //console.log(body['IdPet']);
+                    parseXML(result);
                 }
             });
+            */
+           parseXML(data);
             
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('XML received and processed successfully!');
