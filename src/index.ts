@@ -1,4 +1,4 @@
-import { getData } from "./controllers/S15Controller";
+import { getData } from "./controllers/EventsController";
 import express from 'express';
 import { AppDataSource } from "./data-source"
 

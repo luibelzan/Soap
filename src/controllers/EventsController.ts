@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { parseString } from 'xml2js';
+import { S13 } from '../entities/S13';
+import { AppDataSource } from "../data-source"
 
 export const getData = async (req: Request, result: Response) => {
     //var xmlToString = new XMLSerializer().serializeToString(req.body);
@@ -26,10 +28,18 @@ export const getData = async (req: Request, result: Response) => {
                       var errCat = result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCat;
                       var errCode = result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCode;
                       var fin = [idRpt, idPet, version, cncId, cntId, fh, et, c, d1, d2, errCat, errCode];
-                      console.log(cncId);
-                      console.log(fh);
-                      console.log(et);
-                      console.log(c);
+                      
+                      const s13Repository = AppDataSource.getRepository(S13);
+                      var s13 = new S13();
+                      s13.idRpt = fin[0];
+                      s13.idPet = parseInt(fin[1]);
+                      s13.version = fin[2];
+                      s13.cnc = fin[3];
+                      s13.cnt = fin[4];
+                      s13.fh = fin[5];
+                      s13.et = parseInt(fin[6]);
+                      s13.c = parseInt(fin[7]);
+                      s13Repository.save(s13);
 
                   } else if(idRpt == 'S15') {
                       var cncId = result.Report.Cnc[0].$.Id;
