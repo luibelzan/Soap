@@ -1,23 +1,45 @@
+import { getData } from "./controllers/S15Controller";
+import express from 'express';
 import { AppDataSource } from "./data-source"
-import { User } from "./entity/User"
 
+
+const bodyParser = require('body-parser');
+const bodyParserXml = require('body-parser-xml');
+
+const app = express();
+const ip = '192.168.1.5';
+
+//Conexion con la base de datos
 AppDataSource.initialize().then(async () => {
 
-    /*
-    console.log("Inserting a new user into the database...")
-    const user = new User()
-    user.firstName = "Timber"
-    user.lastName = "Saw"
-    user.age = 25
-    await AppDataSource.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+// Configurar body-parser para manejar solicitudes JSON
+app.use(bodyParser.json());
 
-    console.log("Loading users from the database...")
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
+// Configurar body-parser-xml para manejar solicitudes XML
+bodyParserXml(bodyParser);
+app.use(bodyParser.xml());
 
-    console.log("Here you can setup and run express / fastify / any other framework.")
+// Middleware personalizado para capturar tramas XML de un host específico
+app.use((req, res, next) => {
+  // Comprueba si la solicitud es un POST y si proviene del host específico
+  if (req.method == 'POST' && req.headers.host == '192.168.1.5:8080') {
+    // Verifica si el cuerpo de la solicitud es XML
+    if (req.headers['content-type'].includes('xml')) {
+      //console.log('Trama XML recibida desde el host específico:', req.body);
+      //getData;
+    } else {
+      console.log('Solicitud POST recibida desde el host específico, pero no es XML.');
+    }
+  }
+  next();
+});
 
-    */
+// Ruta de prueba para recibir solicitudes
+app.post('/WS_STGSoapService', getData);
+
+const PORT = 8080;
+app.listen(PORT, () => {
+  console.log(`Servidor Express escuchando en el puerto ${PORT}`);
+});
 
 }).catch(error => console.log(error))
