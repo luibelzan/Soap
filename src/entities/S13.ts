@@ -36,4 +36,10 @@ export class S13 {
   @Column({ nullable: true })
   d2: string;
 
+  @Column({ nullable: true })
+  errCat: number;
+
+  @Column({ nullable: true })
+  errCode: number;
+
 }
