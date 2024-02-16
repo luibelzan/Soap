@@ -16,7 +16,7 @@ export class S65 {
     version: string;
 
     @Column()
-    rtuId: number;
+    rtuId: string;
 
     @Column({ nullable: true })
     errCat: number;

@@ -16,10 +16,10 @@ export class S63 {
     version: string;
 
     @Column()
-    rtuId: number;
+    rtuId: string;
 
     @Column()
-    lvsId: number;
+    lvsId: string;
 
     @Column()
     lvsPos: number;

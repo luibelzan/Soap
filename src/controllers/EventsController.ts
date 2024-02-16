@@ -10,7 +10,7 @@ import { AppDataSource } from "../data-source"
 export const getData = async (req: Request, result: Response) => {
 
     // Acceder al valor de IdPet
-    if(req.body['S:Envelope']['S:Body'][0]['Report'][0] !== undefined){
+    if(req.body && req.body['S:Envelope']){
         const res = req.body['S:Envelope']['S:Body'][0]['Report'][0];
         parseString(res['Payload'][0], (err, result) => {
             if(err) {
@@ -70,7 +70,7 @@ export const getData = async (req: Request, result: Response) => {
         })
 
     } else {
-        const res2 = req.body['SOAP-ENV:Envelope']['SOAP-Envelope:Body'][0]['ns2:Report'][0];
+        const res2 = req.body['SOAP-ENV:Envelope']['SOAP-ENV:Body'][0]['ns2:Report'][0];
         parseString(res2['ns2:Payload'][0], (err, result) => {
             if(err) {
                 console.error('Error al parsear XML:', err);
@@ -84,8 +84,8 @@ export const getData = async (req: Request, result: Response) => {
                     s63.idRpt = idRpt;
                     s63.idPet = parseInt(idPet);
                     s63.version = version;
-                    s63.rtuId = parseInt(result.Report.Rtu[0].$.Id);
-                    s63.lvsId = parseInt(result.Report.Rtu[0].LVSLine[0].$.Id);
+                    s63.rtuId = result.Report.Rtu[0].$.Id;
+                    s63.lvsId = result.Report.Rtu[0].LVSLine[0].$.Id;
                     s63.lvsPos = parseInt(result.Report.Rtu[0].LVSLine[0].$.Pos);
                     if(result.Report.Rtu[0].LVSLine[0].$.ErrCat !== undefined) {
                         s63.errCat = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCat);
@@ -103,7 +103,7 @@ export const getData = async (req: Request, result: Response) => {
                     var s65 = new S65();
                     s65.idRpt = idRpt;
                     s65.idPet = parseInt(idPet);
-                    s65.rtuId = parseInt(result.Report.Rtu[0].$.Id);
+                    s65.rtuId = result.Report.Rtu[0].$.Id;
                     if(result.Report.Rtu[0].$.ErrCat !== undefined) {
                         s65.errCat = parseInt(result.Report.Rtu[0].$.ErrCat);
                         s65.errCode = parseInt(result.Report.Rtu[0].$.ErrCode);
