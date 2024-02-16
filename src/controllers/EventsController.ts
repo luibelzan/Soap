@@ -37,6 +37,7 @@ export const getData = async (req: Request, result: Response) => {
                         s13.errCode = parseInt(result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCode);
                     }
                     s13Repository.save(s13);
+                    console.log('S13 event inserted on DB')
     
                 } else if(idRpt == 'S15') {
                     const s15Repository = AppDataSource.getRepository(S15);
@@ -51,6 +52,7 @@ export const getData = async (req: Request, result: Response) => {
                     s15.d1 = result.Report.Cnc[0].S15[0].$.D1;
                     s15.d2 = result.Report.Cnc[0].S15[0].$.D2;
                     s15Repository.save(s15);
+                    console.log('S15 event inserted on DB')
       
                 } else if(idRpt == 'S31') {
                     var s31Repository = AppDataSource.getRepository(S31)
@@ -65,6 +67,7 @@ export const getData = async (req: Request, result: Response) => {
                     s31.status = parseInt(result.Report.Cnc[0].Cnt[0].S31[0].$.Status);
                     s31.keyRequest = result.Report.Cnc[0].Cnt[0].S31[0].$.KeyRequest;
                     s31Repository.save(s31);
+                    console.log('S31 event inserted on DB')
                 } 
             }
         })
@@ -97,12 +100,14 @@ export const getData = async (req: Request, result: Response) => {
                     s63.d1 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D1;
                     s63.d2 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D2;
                     s63Repository.save(s63);
+                    console.log('S63 event inserted on DB')
       
                 } else if(idRpt == 'S65') {
                     var s65Repository = AppDataSource.getRepository(S65);
                     var s65 = new S65();
                     s65.idRpt = idRpt;
                     s65.idPet = parseInt(idPet);
+                    s65.version = version;
                     s65.rtuId = result.Report.Rtu[0].$.Id;
                     if(result.Report.Rtu[0].$.ErrCat !== undefined) {
                         s65.errCat = parseInt(result.Report.Rtu[0].$.ErrCat);
@@ -114,6 +119,7 @@ export const getData = async (req: Request, result: Response) => {
                     s65.d1 = result.Report.Rtu[0].S65[0].$.D1;
                     s65.d2 = result.Report.Rtu[0].S65[0].$.D2;
                     s65Repository.save(s65);
+                    console.log('S65 event inserted on DB')
                 }
             }
         })
