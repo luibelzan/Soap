@@ -10,10 +10,8 @@ import { AppDataSource } from "../data-source"
 export const getData = async (req: Request, result: Response) => {
 
     // Acceder al valor de IdPet
-    const res = req.body['S:Envelope']['S:Body'][0]['Report'][0];
-    const res2 = req.body['SOAP-ENV:Envelope']['SOAP-Envelope:Body'][0]['ns2:Report'][0];
-    console.log(res);
-    if(res2 == undefined){
+    if(req.body['S:Envelope']['S:Body'][0]['Report'][0] !== undefined){
+        const res = req.body['S:Envelope']['S:Body'][0]['Report'][0];
         parseString(res['Payload'][0], (err, result) => {
             if(err) {
                 console.error('Error al parsear XML:', err);
@@ -70,7 +68,9 @@ export const getData = async (req: Request, result: Response) => {
                 } 
             }
         })
+
     } else {
+        const res2 = req.body['SOAP-ENV:Envelope']['SOAP-Envelope:Body'][0]['ns2:Report'][0];
         parseString(res2['ns2:Payload'][0], (err, result) => {
             if(err) {
                 console.error('Error al parsear XML:', err);
@@ -118,6 +118,7 @@ export const getData = async (req: Request, result: Response) => {
             }
         })
     }
+    
   result.send('<h1>XML received and processed successfully!6</h1>')
 
 };
