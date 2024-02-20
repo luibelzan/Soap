@@ -82,7 +82,7 @@ export const getData = async (req: Request, result: Response) => {
                 var idPet = result.Report.$.IdPet;
                 var version = result.Report.$.Version;
                 if(idRpt == 'S63') {
-                    for(let i=0; i<Object.keys(result.Report.Rtu[0].S63).length; i++) {
+                    for(let i=0; i<Object.keys(result.Report.Rtu[0].LVSLine[0].S63).length; i++) {
                         var s63Repository = AppDataSource.getRepository(S63);
                         var s63 = new S63();
                         s63.idRpt = idRpt;
@@ -95,11 +95,11 @@ export const getData = async (req: Request, result: Response) => {
                             s63.errCat = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCat);
                             s63.errCode = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCode);
                         }
-                        s63.fh = result.Report.Rtu[0].LVSLine[0].S63[0].$.Fh;
-                        s63.et = parseInt(result.Report.Rtu[0].LVSLine[0].S63[0].$.Et);
-                        s63.c = parseInt(result.Report.Rtu[0].LVSLine[0].S63[0].$.C);
-                        s63.d1 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D1;
-                        s63.d2 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D2;
+                        s63.fh = result.Report.Rtu[0].LVSLine[0].S63[i].$.Fh;
+                        s63.et = parseInt(result.Report.Rtu[0].LVSLine[0].S63[i].$.Et);
+                        s63.c = parseInt(result.Report.Rtu[0].LVSLine[0].S63[i].$.C);
+                        s63.d1 = result.Report.Rtu[0].LVSLine[0].S63[i].$.D1;
+                        s63.d2 = result.Report.Rtu[0].LVSLine[0].S63[i].$.D2;
                         s63Repository.save(s63);
                         console.log('S63 event inserted on DB')
                     }
@@ -117,11 +117,11 @@ export const getData = async (req: Request, result: Response) => {
                             s65.errCat = parseInt(result.Report.Rtu[0].$.ErrCat);
                             s65.errCode = parseInt(result.Report.Rtu[0].$.ErrCode);
                         }
-                        s65.fh = result.Report.Rtu[0].S65[0].$.Fh;
-                        s65.et = parseInt(result.Report.Rtu[0].S65[0].$.Et);
-                        s65.c = parseInt(result.Report.Rtu[0].S65[0].$.C);
-                        s65.d1 = result.Report.Rtu[0].S65[0].$.D1;
-                        s65.d2 = result.Report.Rtu[0].S65[0].$.D2;
+                        s65.fh = result.Report.Rtu[0].S65[i].$.Fh;
+                        s65.et = parseInt(result.Report.Rtu[0].S65[i].$.Et);
+                        s65.c = parseInt(result.Report.Rtu[0].S65[i].$.C);
+                        s65.d1 = result.Report.Rtu[0].S65[i].$.D1;
+                        s65.d2 = result.Report.Rtu[0].S65[i].$.D2;
                         s65Repository.save(s65);
                         console.log('S65 event inserted on DB')
                     }
