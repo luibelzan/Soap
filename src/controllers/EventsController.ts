@@ -82,44 +82,49 @@ export const getData = async (req: Request, result: Response) => {
                 var idPet = result.Report.$.IdPet;
                 var version = result.Report.$.Version;
                 if(idRpt == 'S63') {
-                    var s63Repository = AppDataSource.getRepository(S63);
-                    var s63 = new S63();
-                    s63.idRpt = idRpt;
-                    s63.idPet = parseInt(idPet);
-                    s63.version = version;
-                    s63.rtuId = result.Report.Rtu[0].$.Id;
-                    s63.lvsId = result.Report.Rtu[0].LVSLine[0].$.Id;
-                    s63.lvsPos = parseInt(result.Report.Rtu[0].LVSLine[0].$.Pos);
-                    if(result.Report.Rtu[0].LVSLine[0].$.ErrCat !== undefined) {
-                        s63.errCat = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCat);
-                        s63.errCode = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCode);
+                    for(let i=0; i<Object.keys(result.Report.Rtu[0].S63).length; i++) {
+                        var s63Repository = AppDataSource.getRepository(S63);
+                        var s63 = new S63();
+                        s63.idRpt = idRpt;
+                        s63.idPet = parseInt(idPet);
+                        s63.version = version;
+                        s63.rtuId = result.Report.Rtu[0].$.Id;
+                        s63.lvsId = result.Report.Rtu[0].LVSLine[0].$.Id;
+                        s63.lvsPos = parseInt(result.Report.Rtu[0].LVSLine[0].$.Pos);
+                        if(result.Report.Rtu[0].LVSLine[0].$.ErrCat !== undefined) {
+                            s63.errCat = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCat);
+                            s63.errCode = parseInt(result.Report.Rtu[0].LVSLine[0].$.ErrCode);
+                        }
+                        s63.fh = result.Report.Rtu[0].LVSLine[0].S63[0].$.Fh;
+                        s63.et = parseInt(result.Report.Rtu[0].LVSLine[0].S63[0].$.Et);
+                        s63.c = parseInt(result.Report.Rtu[0].LVSLine[0].S63[0].$.C);
+                        s63.d1 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D1;
+                        s63.d2 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D2;
+                        s63Repository.save(s63);
+                        console.log('S63 event inserted on DB')
                     }
-                    s63.fh = result.Report.Rtu[0].LVSLine[0].S63[0].$.Fh;
-                    s63.et = parseInt(result.Report.Rtu[0].LVSLine[0].S63[0].$.Et);
-                    s63.c = parseInt(result.Report.Rtu[0].LVSLine[0].S63[0].$.C);
-                    s63.d1 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D1;
-                    s63.d2 = result.Report.Rtu[0].LVSLine[0].S63[0].$.D2;
-                    s63Repository.save(s63);
-                    console.log('S63 event inserted on DB')
+                    
       
                 } else if(idRpt == 'S65') {
-                    var s65Repository = AppDataSource.getRepository(S65);
-                    var s65 = new S65();
-                    s65.idRpt = idRpt;
-                    s65.idPet = parseInt(idPet);
-                    s65.version = version;
-                    s65.rtuId = result.Report.Rtu[0].$.Id;
-                    if(result.Report.Rtu[0].$.ErrCat !== undefined) {
-                        s65.errCat = parseInt(result.Report.Rtu[0].$.ErrCat);
-                        s65.errCode = parseInt(result.Report.Rtu[0].$.ErrCode);
+                    for(let i=0; i<Object.keys(result.Report.Rtu[0].S65).length; i++) {
+                        var s65Repository = AppDataSource.getRepository(S65);
+                        var s65 = new S65();
+                        s65.idRpt = idRpt;
+                        s65.idPet = parseInt(idPet);
+                        s65.version = version;
+                        s65.rtuId = result.Report.Rtu[0].$.Id;
+                        if(result.Report.Rtu[0].$.ErrCat !== undefined) {
+                            s65.errCat = parseInt(result.Report.Rtu[0].$.ErrCat);
+                            s65.errCode = parseInt(result.Report.Rtu[0].$.ErrCode);
+                        }
+                        s65.fh = result.Report.Rtu[0].S65[0].$.Fh;
+                        s65.et = parseInt(result.Report.Rtu[0].S65[0].$.Et);
+                        s65.c = parseInt(result.Report.Rtu[0].S65[0].$.C);
+                        s65.d1 = result.Report.Rtu[0].S65[0].$.D1;
+                        s65.d2 = result.Report.Rtu[0].S65[0].$.D2;
+                        s65Repository.save(s65);
+                        console.log('S65 event inserted on DB')
                     }
-                    s65.fh = result.Report.Rtu[0].S65[0].$.Fh;
-                    s65.et = parseInt(result.Report.Rtu[0].S65[0].$.Et);
-                    s65.c = parseInt(result.Report.Rtu[0].S65[0].$.C);
-                    s65.d1 = result.Report.Rtu[0].S65[0].$.D1;
-                    s65.d2 = result.Report.Rtu[0].S65[0].$.D2;
-                    s65Repository.save(s65);
-                    console.log('S65 event inserted on DB')
                 }
             }
         })
