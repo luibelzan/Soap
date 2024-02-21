@@ -16,7 +16,7 @@ export class S15 {
   version: string;
 
   @Column()
-  cnc: number;
+  cnc: string;
 
   @Column()
   fh: string;
