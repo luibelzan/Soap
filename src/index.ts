@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const bodyParserXml = require('body-parser-xml');
 
 const app = express();
-const ip = '192.168.1.5';
+const host = '192.168.1.5:8080';
 
 //Conexion con la base de datos
 AppDataSource.initialize().then(async () => {
@@ -22,16 +22,17 @@ app.use(bodyParser.xml());
 // Middleware personalizado para capturar tramas XML de un host específico
 app.use((req, res, next) => {
   // Comprueba si la solicitud es un POST y si proviene del host específico
-  if (req.method == 'POST' && req.headers.host == '192.168.1.5:8080') {
+  if (req.method == 'POST' && req.headers.host == host) {
     // Verifica si el cuerpo de la solicitud es XML
-    if (req.headers['content-type'].includes('xml')) {
+    if (req.is('xml')) {
       //console.log('Trama XML recibida desde el host específico:', req.body);
-      //getData;
+      next();
     } else {
       console.log('Solicitud POST recibida desde el host específico, pero no es XML.');
     }
+  } else {
+    next();
   }
-  next();
 });
 
 // Ruta de prueba para recibir solicitudes
