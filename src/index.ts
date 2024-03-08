@@ -22,9 +22,9 @@ app.use(bodyParser.xml());
 // Middleware personalizado para capturar tramas XML de un host específico
 app.use((req, res, next) => {
   // Comprueba si la solicitud es un POST y si proviene del host específico
-  if (req.method == 'POST' && req.headers.host == host) {
+  if (req.method == 'POST' && req.headers.host == host && req.path==='WS_STGSoapService') {
     // Verifica si el cuerpo de la solicitud es XML
-    if (req.is('xml')) {
+    if (req.headers['content-type'].includes('xml')) {
       //console.log('Trama XML recibida desde el host específico:', req.body);
       next();
     } else {
