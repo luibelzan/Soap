@@ -14,12 +14,12 @@ export const getData = async (req: Request, res: Response) => {
 
         // Verificar si el cuerpo de la solicitud contiene datos
         if (body) {
-            const report = body['S:Envelope']?.['S:Body']?.[0]?.['Report']?.[0] ||
-                          body['SOAP-ENV:Envelope']?.['SOAP-ENV:Body']?.[0]?.['ns2:Report']?.[0];
+            const report = body['S:Envelope']?.['S:Body']?.[0]?.['Report']?.[0]?.['Payload']?.[0] ||
+                          body['SOAP-ENV:Envelope']?.['SOAP-ENV:Body']?.[0]?.['ns2:Report']?.[0]?.['ns2:Payload']?.[0];
             
             if (report) {
                 console.log('Parseando evento...')
-                const parsedReport = await parseXml(report['Payload'][0] || report['ns2:Report'][0]);
+                const parsedReport = await parseXml(report);
                 console.log('Evento parseado')
                 await processReport(parsedReport);
             }
