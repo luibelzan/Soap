@@ -61,23 +61,26 @@ async function parseXml(xml: string): Promise<any> {
 
 async function processReport(report: any): Promise<void> {
     console.log('Procesando evento...')
+    const fechaActual = new Date();
+    const fechaFormateada = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
+
     const { IdRpt, IdPet, Version } = report.Report.$;
 
     switch (IdRpt) {
         case 'S13':
-            await processS13(report, IdRpt, IdPet, Version);
+            await processS13(report, IdRpt, IdPet, Version, fechaFormateada);
             break;
         case 'S15':
-            await processS15(report, IdRpt, IdPet, Version);
+            await processS15(report, IdRpt, IdPet, Version, fechaFormateada);
             break;
         case 'S31':
-            await processS31(report, IdRpt, IdPet, Version);
+            await processS31(report, IdRpt, IdPet, Version, fechaFormateada);
             break;
         case 'S63':
-            await processS63(report, IdRpt, IdPet, Version);
+            await processS63(report, IdRpt, IdPet, Version, fechaFormateada);
             break;
         case 'S65':
-            await processS65(report, IdRpt, IdPet, Version);
+            await processS65(report, IdRpt, IdPet, Version, fechaFormateada);
             break;
         default:
             console.error(`Unknown report type: ${IdRpt}`);
@@ -85,7 +88,7 @@ async function processReport(report: any): Promise<void> {
     }
 }
 
-async function processS13(report: any, idRpt: string, idPet: number, version: string): Promise<void> {
+async function processS13(report: any, idRpt: string, idPet: number, version: string, fecha: string): Promise<void> {
     try {
         console.log('S13 encontrado')
         const s13Repository = AppDataSource.getRepository(S13);
@@ -105,14 +108,14 @@ async function processS13(report: any, idRpt: string, idPet: number, version: st
             s13.errCode = parseInt(report.Report.Cnc[0].Cnt[0].S13[0].$.ErrCode);
         }
         s13Repository.save(s13);
-        console.log('S13 event inserted on DB\n');
+        console.log('S13 event inserted on DB ', fecha, '/n');
     } catch(error) {
         console.error('Error al procesar S13: ', error);
     }
     
 }
 
-async function processS15(report: any, idRpt: string, idPet: number, version: string): Promise<void> {
+async function processS15(report: any, idRpt: string, idPet: number, version: string, fecha: string): Promise<void> {
     try{
         console.log('S15 detectado')
         const s15Repository = AppDataSource.getRepository(S15);
@@ -127,14 +130,14 @@ async function processS15(report: any, idRpt: string, idPet: number, version: st
         s15.d1 = report.Report.Cnc[0].S15[0].$.D1;
         s15.d2 = report.Report.Cnc[0].S15[0].$.D2;
         s15Repository.save(s15);
-        console.log('S15 event inserted on DB\n')
+        console.log('S15 event inserted on DB ', fecha, '/n');
     } catch(error) {
         console.error('Error al procesar S15:', error);
     }
     
 }
 
-async function processS31(report: any, idRpt: string, idPet: number, version: string): Promise<void> {
+async function processS31(report: any, idRpt: string, idPet: number, version: string, fecha: string): Promise<void> {
     try {
         console.log('S31 detectado')
         const s31Repository = AppDataSource.getRepository(S31);
@@ -149,14 +152,14 @@ async function processS31(report: any, idRpt: string, idPet: number, version: st
         s31.status = parseInt(report.Report.Cnc[0].Cnt[0].S31[0].$.Status);
         s31.keyRequest = report.Report.Cnc[0].Cnt[0].S31[0].$.KeyRequest;
         s31Repository.save(s31);
-        console.log('S31 event inserted on DB\n')
+        console.log('S31 event inserted on DB ', fecha, '/n');
     } catch(error) {
         console.error('Error al procesar S31:', error);
     }
     
 }
 
-async function processS63(report: any, idRpt: string, idPet: number, version: string): Promise<void> {
+async function processS63(report: any, idRpt: string, idPet: number, version: string, fecha: string): Promise<void> {
     try {
         for(let i=0; i<Object.keys(report.Report.Rtu[0].LVSLine[0].S63).length; i++) {
             console.log('S63 detectado')
@@ -178,7 +181,7 @@ async function processS63(report: any, idRpt: string, idPet: number, version: st
             s63.d1 = report.Report.Rtu[0].LVSLine[0].S63[i].$.D1;
             s63.d2 = report.Report.Rtu[0].LVSLine[0].S63[i].$.D2;
             s63Repository.save(s63);
-            console.log('S63 event inserted on DB\n')
+            console.log('S63 event inserted on DB ', fecha, '/n');
         }
     } catch(error) {
         console.error('Error al procesar S63: ', error);
@@ -186,7 +189,7 @@ async function processS63(report: any, idRpt: string, idPet: number, version: st
     
 }
 
-async function processS65(report: any, idRpt: string, idPet: number, version: string): Promise<void> {
+async function processS65(report: any, idRpt: string, idPet: number, version: string, fecha: string): Promise<void> {
     try {
         for(let i=0; i<Object.keys(report.Report.Rtu[0].S65).length; i++) {
             console.log('S65 detectado')
@@ -206,7 +209,7 @@ async function processS65(report: any, idRpt: string, idPet: number, version: st
             s65.d1 = report.Report.Rtu[0].S65[i].$.D1;
             s65.d2 = report.Report.Rtu[0].S65[i].$.D2;
             s65Repository.save(s65);
-            console.log('S65 event inserted on DB\n')
+            console.log('S65 event inserted on DB ', fecha, '/n');
         }
     } catch(error) {
         console.error('Error al procesar S65:', error);
