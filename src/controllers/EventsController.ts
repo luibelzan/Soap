@@ -20,6 +20,19 @@ xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
 </s:Body>
 </s:Envelope>`;
 
+const xmlResponse2 = `<SOAP-ENV:Envelope
+xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+<SOAP-ENV:Body>
+    <ns2:UpdateRequestStatusResponse
+        xmlns="http://www.asais.fr/ns/Saturne/STG/ws"
+        xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+        <ns2:UpdateRequestStatusResult>
+                    true
+                    </ns2:UpdateRequestStatusResult>
+    </ns2:UpdateRequestStatusResponse>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>`;
+
 
 export const getData = async (req: Request, res: Response) => {
 
@@ -32,15 +45,21 @@ export const getData = async (req: Request, res: Response) => {
             const report = body['S:Envelope']?.['S:Body']?.[0]?.['Report']?.[0]?.['Payload']?.[0] ||
                           body['SOAP-ENV:Envelope']?.['SOAP-ENV:Body']?.[0]?.['ns2:Report']?.[0]?.['ns2:Payload']?.[0];
             
-            if (report) {
+            if (report?.Report !==undefined) {
                 console.log('Evento encontrado. Parseando evento...')
                 const parsedReport = await parseXml(report);
                 console.log('Evento parseado')
                 await processReport(parsedReport);
             }
         }
-        res.set('Content-Type', 'application/xml');
-        res.send(xmlResponse);
+		if(body['S:Envelope']?.['S:Body']?.[0]?.['Report']?.[0]?.['Payload']?.[0]) {
+			res.set('Content-Type', 'application/xml');
+			res.send(xmlResponse);
+		} else {
+			res.set('Content-Type', 'application/xml');
+			res.send(xmlResponse2);
+		}
+        
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('<h1>Error processing XML</h1>');
@@ -61,8 +80,18 @@ async function parseXml(xml: string): Promise<any> {
 
 async function processReport(report: any): Promise<void> {
     console.log('Procesando evento...')
-    const fechaActual = new Date();
-    const fechaFormateada = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
+    const fechaHoraActual = new Date();
+
+	// Obtener los componentes de la fecha y hora
+	const dia = fechaHoraActual.getDate();
+	const mes = fechaHoraActual.getMonth() + 1; // Sumamos 1 porque los meses se indexan desde 0
+	const año = fechaHoraActual.getFullYear();
+	const hora = fechaHoraActual.getHours();
+	const minutos = fechaHoraActual.getMinutes();
+	const segundos = fechaHoraActual.getSeconds();
+
+// Formatear la fecha y hora
+const fechaFormateada = `${dia}/${mes}/${año} ${hora}:${minutos}:${segundos}`;
 
     const { IdRpt, IdPet, Version } = report.Report.$;
 
