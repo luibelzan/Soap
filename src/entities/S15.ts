@@ -3,6 +3,9 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 @Entity()
 export class S15 {
 
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   idRpt: string;
 
@@ -13,7 +16,7 @@ export class S15 {
   version: string;
 
   @Column()
-  cnc: number;
+  cnc: string;
 
   @Column()
   fh: string;
@@ -24,10 +27,10 @@ export class S15 {
   @Column()
   c: number;
 
-  @Column()
+  @Column({ nullable: true })
   d1: string;
 
-  @Column()
+  @Column({ nullable: true })
   d2: string;
 
 }

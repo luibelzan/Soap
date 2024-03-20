@@ -1,56 +1,34 @@
+import { parseString } from 'xml2js';
 
-const parser = require('xml2js');
+var xmlstr = '<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://www.asais.fr/ns/Saturne/DC/ws/WS_DCSoap" xmlns:ns1="http://www.asais.fr/ns/Saturne/DC/ws" xmlns:ns4="http://www.asais.fr/ns/Saturne/DC/ws/WS_DCSoap12" xmlns:ns5="http://www.asais.fr/ns/Saturne/STG/ws/WS_STGSoap" xmlns:ns2="http://www.asais.fr/ns/Saturne/STG/ws" xmlns:ns6="http://www.asais.fr/ns/Saturne/STG/ws/WS_STGSoap12"><SOAP-ENV:Body><ns2:Report><ns2:IdPet>0</ns2:IdPet><ns2:IdRTU>CIRR208232004207</ns2:IdRTU><ns2:ReqStatus>0</ns2:ReqStatus><ns2:Format>0</ns2:Format><ns2:Payload>&lt;Report IdRpt="S63" IdPet="0" Version="1.6"&gt;&#xD;&#xA;	&lt;Rtu Id="CIRR208232004207"&gt;&#xD;&#xA;		&lt;LVSLine Id="CIRN211231500500" Pos="99"&gt;&#xD;&#xA;			&lt;S63 Fh="20240215152649000W" Et="1" C="39"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240215152649000W" Et="1" C="39"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240215152649000W" Et="1" C="39"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240215152649000W" Et="1" C="39"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240215152649000W" Et="1" C="39"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240215152709000W" Et="1" C="26"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240215222039000W" Et="1" C="27"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240216094545000W" Et="1" C="26"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240216143217000W" Et="1" C="1"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240216143217000W" Et="1" C="98"&gt;&#xD;&#xA;				&lt;D1&gt;19700101010230000W&lt;/D1&gt;&#xD;&#xA;			&lt;/S63&gt;&#xD;&#xA;			&lt;S63 Fh="20240216225837000W" Et="1" C="27"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240217144553000W" Et="1" C="26"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240217232029000W" Et="1" C="27"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240218145057000W" Et="1" C="26"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240218235047000W" Et="1" C="27"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240219100414000W" Et="1" C="26"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240220033907000W" Et="1" C="27"/&gt;&#xD;&#xA;			&lt;S63 Fh="20240220093945000W" Et="1" C="26"/&gt;&#xD;&#xA;		&lt;/LVSLine&gt;&#xD;&#xA;	&lt;/Rtu&gt;&#xD;&#xA;&lt;/Report&gt;&#xD;&#xA;</ns2:Payload></ns2:Report></SOAP-ENV:Body></SOAP-ENV:Envelope>'
 
-//const xmlString = `<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><Report xmlns="http://www.asais.fr/ns/Saturne/STG/ws">\x0a    <IdPet>0</IdPet>\x0a    <IdDC>SAG0189002244</IdDC>\x0a    <ReqStatus>0</ReqStatus>\x0a    <Format>0</Format>\x0a    <Payload>&lt;Report IdRpt="S31" IdPet="0" Version="3.1.c"&gt;\x0a    &lt;Cnc Id="SAG0189002244"&gt;\x0a        &lt;Cnt Id="LGZ0020495057"&gt;\x0a            &lt;S31 Fh="20240208095339812W" ClientId="4" Status="1" KeyRequest="00000101"/&gt;\x0a        &lt;/Cnt&gt;\x0a    &lt;/Cnc&gt;\x0a&lt;/Report&gt;</Payload>\x0a</Report></S:Body></S:Envelope>`;
+parseString(xmlstr, (err, result) => {
+    if(err) {
+        console.error('Error al parsear XML:', err);
+    } else { 
+        var res = result['SOAP-ENV:Envelope']['SOAP-ENV:Body'][0]['ns2:Report'][0]['ns2:Payload'][0];
 
-export function parseXML(xmlString: string) {
+        console.log(res);
+        parseString(res, (err, result) => {
+            var s65 = result.Report.Rtu[0].S65;
+            for(let i=0; i<Object.keys(s65).length; i++) {
+                //console.log(s65[i].$.Fh);
+            }
+        })
+    }
+})
 
-    // Parsear el XML
-    parser.parseString(xmlString, (err, result) => {
-        if (err) {
-            console.error('Error al parsear XML:', err);
-        } else {
-            // Acceder al valor de IdPet
-            const res = result['S:Envelope']['S:Body'][0]['Report'][0];
-
-            //console.log(res['Payload'][0]);
-            parser.parseString(res['Payload'][0], (err, result) => {
-                if(err) {
-                    console.error('Error al parsear XML:', err);
-                } else {
-                    var idRpt = result.Report.$.IdRpt;
-                    var idPet = result.Report.$.IdPet;
-                    var version = result.Report.$.Version;
-                    if(idRpt == 'S13') {
-                        var cncId = result.Report.Cnc[0].$.Id;
-                        var cntId = result.Report.Cnc[0].Cnt[0].$.Id;
-                        var fh = result.Report.Cnc[0].Cnt[0].S13[0].$.Fh;
-                        var et = result.Report.Cnc[0].Cnt[0].S13[0].$.Et;
-                        var c = result.Report.Cnc[0].Cnt[0].S13[0].$.C;
-                        var d1 = result.Report.Cnc[0].Cnt[0].S13[0].$.D1;
-                        var d2 = result.Report.Cnc[0].Cnt[0].S13[0].$.D2;
-                        var errCat = result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCat;
-                        var errCode = result.Report.Cnc[0].Cnt[0].S13[0].$.ErrCode;
-
-                    } else if(idRpt == 'S15') {
-                        var cncId = result.Report.Cnc[0].$.Id;
-                        var fh = result.Report.Cnc[0].S15[0].$.Fh;
-                        var et = result.Report.Cnc[0].S15[0].$.Et;
-                        var c = result.Report.Cnc[0].S15[0].$.C;
-                        var d1 = result.Report.Cnc[0].S15[0].$.D1;
-                        var d2 = result.Report.Cnc[0].S15[0].$.D2;;
-                    } else if(idRpt == 'S31') {
-                        var cncId = result.Report.Cnc[0].$.Id;
-                        var fh = result.Report.Cnc[0].S31[0].$.Fh;
-                        var clientId = result.Report.Cnc[0].S15[0].$.ClientId;
-                        var status = result.Report.Cnc[0].S15[0].$.Status;
-                        var keyRequest = result.Report.Cnc[0].S15[0].$.KeyRequest;
-                    } else if(idRpt == 'S63') {
-
-                    }
-                }
-            })
+function recorrerObjetos(objeto: any) {
+    for (const clave in objeto) {
+        if (objeto.hasOwnProperty(clave)) {
+            const valor = objeto[clave];
+            if (typeof valor === 'object') {
+                // Si el valor es un objeto, lo recorremos de forma recursiva
+                recorrerObjetos(valor);
+            } else {
+                // Si el valor no es un objeto, lo mostramos
+                console.log(`Clave: ${clave}, Valor: ${valor}`);
+            }
         }
-    });
+    }
 }
-
