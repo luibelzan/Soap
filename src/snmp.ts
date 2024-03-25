@@ -1,15 +1,32 @@
+
+var dgram = require('dgram');
+//var snmp = require('snmpjs');
+var snmp2 = require('snmp-native');
+
+var server = dgram.createSocket("udp4");
+
+server.on("listening", function() {
+    var addr = server.address();
+    console.log("Server listening "+ addr.address + ":" + addr.port);
+});
+
+server.on("message", function (msg, rinfo) {
+    console.log("From " + rinfo.address + ":" + rinfo.port);
+    console.log("server got: " + msg);
+    //console.log("Parse: " + snmp.parseMessage({raw:msg}));
+    console.log("Parse: " + snmp2.parse(msg));
+});
+
+server.bind(162);
+
+
 var snmp = require ("net-snmp");
 
 var options = {
     port: 1161,
-    retries: 1,
-    timeout: 5000,
-    backoff: 1.0,
     trapPort: 162,
     version: snmp.Version2c,
-    backwardsGetNexts: true,
-    reportOidMismatchErrors: false,
-    idBitsSize: 32
+    disableAuthorization: true
 };
 
 var session = snmp.createSession ("188.171.38.203", "public", options);
@@ -28,11 +45,13 @@ session.get (oids, function (error, varbinds) {
             }
         }
     }
-    session.close ();
+    //session.close ();
 });
 
 session.trap (snmp.TrapType.LinkDown, function (error) {
-    if (error) {
-        console.error (error);
-    }
+  if (error) {
+      console.error (error);
+  }
 });
+
+
